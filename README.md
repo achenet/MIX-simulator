@@ -25,3 +25,7 @@ I1, I2, I3, I4, I5, I6 - sign plus 2 bytes
 
 J - 2 bytes, no sign (always positive)
 
+I've yet to find a satisfactory way to handle byte packing,
+and so have opted to just assume at that all bytes are composed
+of 6 binary bits, capable of representing numbers 0 to 63.
+If you have any better ideas, please let me know.

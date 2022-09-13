@@ -156,6 +156,8 @@ impl MIX {
     fn store_Z(&mut self, address: u16, index: u8, field_modifier: u8) {}
 
     // Add contents of Memory cell to rA
+    // set overflow toggle to on if the sum is too large
+    // to store in register A
     fn add(&mut self, address: u16, index: u8, field_modifier: u8) {}
 }
 
@@ -169,7 +171,7 @@ struct Operation {
 fn main() {
     println!("Hello, MIX!");
     let mut mix = MIX::new();
-    println!("{:?}", mix);
+    println!("{:?}", mix.A);
 }
 
 fn parse_op_code() {
@@ -182,4 +184,8 @@ fn long_to_short_word(l: LongWord) -> ShortWord {
         sign: l.sign,
         bytes: [l.bytes[3], l.bytes[4]],
     }
+}
+
+fn calculate_field_modifier(field_modifier: u8) -> (u8, u8) {
+    (field_modifier / 8, field_modifier % 8)
 }

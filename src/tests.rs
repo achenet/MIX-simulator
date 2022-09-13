@@ -35,3 +35,25 @@ fn creation() {
     };
     assert_eq!(got, expect);
 }
+
+#[test]
+fn load_A() {
+    let mut m = MIX::new();
+    m.Memory[2000] = LongWord {
+        sign: true,
+        bytes: [63, 17, 3, 5, 4],
+    };
+    m.load_A(2000, 0, 5);
+    let expect = LongWord {
+        sign: true,
+        bytes: [63, 17, 3, 5, 4],
+    };
+    assert_eq!(m.A, expect);
+}
+
+#[test]
+fn calculate_field_modifier_test() {
+    assert_eq!((0, 5), calculate_field_modifier(5));
+    assert_eq!((1, 5), calculate_field_modifier(13));
+    assert_eq!((2, 5), calculate_field_modifier(21));
+}
