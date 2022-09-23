@@ -57,3 +57,33 @@ fn calculate_field_modifier_test() {
     assert_eq!((1, 5), calculate_field_modifier(13));
     assert_eq!((2, 5), calculate_field_modifier(21));
 }
+
+#[test]
+fn test_apply_field_spec_load() {
+    assert_eq!(
+        LongWord {
+            sign: false,
+            bytes: [63, 17, 3, 5, 4],
+        },
+        apply_field_specification(
+            LongWord {
+                sign: false,
+                bytes: [63, 17, 3, 5, 4],
+            },
+            5
+        )
+    );
+    assert_eq!(
+        LongWord {
+            sign: false,
+            bytes: [0, 0, 63, 17, 3],
+        },
+        apply_field_specification(
+            LongWord {
+                sign: false,
+                bytes: [63, 17, 3, 5, 4],
+            },
+            3
+        )
+    );
+}

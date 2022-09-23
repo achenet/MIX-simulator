@@ -50,11 +50,11 @@ struct MIX {
     X: LongWord,
     I: [ShortWord; 6], // Will be be i0..i5, not i1..i6
     J: ShortWord,
-    // Memory
+
     Memory: [LongWord; 4000],
-    // Oveflow toggle
+
     OverflowToggle: OverflowToggle,
-    // Comparison indicator
+
     ComparisonIndicator: ComparisonIndicator,
     // Input/Output devices
     IO: Vec<LongWord>,
@@ -89,7 +89,6 @@ impl MIX {
         }
     }
 
-    //TODO
     fn run_program(&mut self, program: String) {}
 
     // Every op code
@@ -97,7 +96,8 @@ impl MIX {
     fn load_A(&mut self, address: u16, index: u8, field_modifier: u8) {
         let i = index as usize;
         let m = address + self.I[i].bytes[0] as u16 + self.I[i].bytes[1] as u16;
-        self.A = self.Memory[m as usize];
+        let word = self.Memory[m as usize];
+        self.A = word;
     }
 
     fn load_X(&mut self, address: u16, index: u8, field_modifier: u8) {
@@ -159,13 +159,27 @@ impl MIX {
     // set overflow toggle to on if the sum is too large
     // to store in register A
     fn add(&mut self, address: u16, index: u8, field_modifier: u8) {}
-}
 
-struct Operation {
-    Address: u16,
-    Index: u8,
-    FieldModifier: u8,
-    OpCode: u8,
+    fn sub(&mut self, address: u16, index: u8, field_modifier: u8) {}
+
+    fn mul(&mut self, address: u16, index: u8, field_modifier: u8) {}
+
+    fn div(&mut self, address: u16, index: u8, field_modifier: u8) {}
+
+    fn no_op(&mut self) {
+        // Do nothing
+    }
+
+    fn exec(&mut self, op: Operation) {
+        match op.code {
+            00 => self.no_op(),
+            01 => self.add(op.address, op.index, op.field_modifier),
+            02 => self.sub(op.address, op.index, op.field_modifier),
+            03 => self.mul(op.address, op.index, op.field_modifier),
+            04 => self.div(op.address, op.index, op.field_modifier),
+            _ => todo!(),
+        }
+    }
 }
 
 fn main() {
@@ -174,9 +188,25 @@ fn main() {
     println!("{:?}", mix.A);
 }
 
-fn parse_op_code() {
-    //  bytes 1 and 2 are the address, 3 is , 4 is the modificatin/field specificatoin, 5 is the op
-    //  code.
+struct Operation {
+    address: u16,
+    index: u8,
+    field_modifier: u8,
+    code: u8,
+}
+
+impl Operation {
+    fn parse_op_code(l: LongWord) -> Self {
+        // bytes 1 and 2 are the address, 3 is ,
+        // 4 is the modification/field specification,
+        // 5 is the op code
+        Operation {
+            address: (64 * l.bytes[0] + l.bytes[1]) as u16,
+            index: l.bytes[3],
+            field_modifier: l.bytes[4],
+            code: l.bytes[5],
+        }
+    }
 }
 
 fn long_to_short_word(l: LongWord) -> ShortWord {
@@ -188,4 +218,19 @@ fn long_to_short_word(l: LongWord) -> ShortWord {
 
 fn calculate_field_modifier(field_modifier: u8) -> (u8, u8) {
     (field_modifier / 8, field_modifier % 8)
+}
+
+// TODO get this working
+fn apply_field_specification(w: LongWord, f: u8) -> LongWord {
+    let (l, r) = calculate_field_modifier(f);
+    let mut s = true;
+    if l == 0 {
+        s = w.sign;
+    }
+    let (l, r) = ((l - 1) as usize, (r - 1) as usize);
+    let mut b = [0; 5];
+    for i in (l..r) {
+        b[i] = w.bytes[i - 1]
+    }
+    LongWord { sign: s, bytes: b }
 }
