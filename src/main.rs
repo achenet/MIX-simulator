@@ -34,6 +34,22 @@ impl LongWord {
         }
         o
     }
+
+    fn parse_subfield(&self, l: u8, r: u8) -> SubField {
+        let sign = if l > 0 { true } else { self.sign };
+        let mut out = SubField {
+            sign: if l > 0 { true } else { self.sign },
+            bytes: vec![],
+        };
+
+        out
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct SubField {
+    sign: bool,
+    bytes: Vec<u8>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
