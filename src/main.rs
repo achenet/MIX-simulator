@@ -27,6 +27,13 @@ struct LongWord {
 }
 
 impl LongWord {
+    fn new(sign: bool, bytes: [u8; 5]) -> Self {
+        LongWord {
+            sign: sign,
+            bytes: bytes,
+        }
+    }
+
     fn value(&self) -> u32 {
         let mut o: u32 = 0;
         for i in 0..5 {
@@ -41,6 +48,10 @@ impl LongWord {
             sign: if l > 0 { true } else { self.sign },
             bytes: vec![],
         };
+        let r = r - 1;
+        for i in (0..(l - r)) {
+            out.bytes.push(self.bytes[i as usize])
+        }
 
         out
     }

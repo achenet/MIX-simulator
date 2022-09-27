@@ -87,3 +87,13 @@ fn test_apply_field_spec_load() {
         )
     );
 }
+
+#[test]
+fn test_parse_subfield() {
+    let input = LongWord::new(true, [1, 2, 3, 4, 5]);
+    let expect = SubField {
+        sign: true,
+        bytes: vec![1, 2, 3, 4, 5],
+    };
+    assert_eq!(input.parse_subfield(0, 5), expect);
+}
