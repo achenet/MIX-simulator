@@ -42,15 +42,15 @@ impl LongWord {
         o
     }
 
-    fn parse_subfield(&self, l: u8, r: u8) -> SubField {
+    fn parse_subfield(&self, mut l: u8, r: u8) -> SubField {
         let sign = if l > 0 { true } else { self.sign };
         let mut out = SubField {
             sign: if l > 0 { true } else { self.sign },
             bytes: vec![],
         };
-        let r = r - 1;
-        for i in (0..(l - r)) {
-            out.bytes.push(self.bytes[i as usize])
+        l = if l == 0 { 0 } else { l - 1 };
+        for i in (0..(r - l)) {
+            out.bytes.push(self.bytes[(i + l) as usize])
         }
 
         out
@@ -249,15 +249,18 @@ fn calculate_field_modifier(field_modifier: u8) -> (u8, u8) {
 
 // TODO get this working
 fn apply_field_specification(w: LongWord, f: u8) -> LongWord {
-    let (l, r) = calculate_field_modifier(f);
-    let mut s = true;
-    if l == 0 {
-        s = w.sign;
+    //    let (l, r) = calculate_field_modifier(f);
+    //    let mut s = true;
+    //    if l == 0 {
+    //        s = w.sign;
+    //    }
+    //    let (l, r) = ((l - 1) as usize, (r - 1) as usize);
+    //    let mut b = [0; 5];
+    //    for i in (l..r) {
+    //        b[i] = w.bytes[i - 1]
+    //    }
+    LongWord {
+        sign: true,
+        bytes: [0, 1, 2, 3, 4],
     }
-    let (l, r) = ((l - 1) as usize, (r - 1) as usize);
-    let mut b = [0; 5];
-    for i in (l..r) {
-        b[i] = w.bytes[i - 1]
-    }
-    LongWord { sign: s, bytes: b }
 }
