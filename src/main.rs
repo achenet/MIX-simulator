@@ -55,6 +55,12 @@ impl LongWord {
 
         out
     }
+
+    fn apply_field_modifier(&mut self, s: SubField) {
+        self.sign = s.sign;
+        self.bytes = [0; 5];
+        // TODO
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -245,22 +251,4 @@ fn long_to_short_word(l: LongWord) -> ShortWord {
 
 fn calculate_field_modifier(field_modifier: u8) -> (u8, u8) {
     (field_modifier / 8, field_modifier % 8)
-}
-
-// TODO get this working
-fn apply_field_specification(w: LongWord, f: u8) -> LongWord {
-    //    let (l, r) = calculate_field_modifier(f);
-    //    let mut s = true;
-    //    if l == 0 {
-    //        s = w.sign;
-    //    }
-    //    let (l, r) = ((l - 1) as usize, (r - 1) as usize);
-    //    let mut b = [0; 5];
-    //    for i in (l..r) {
-    //        b[i] = w.bytes[i - 1]
-    //    }
-    LongWord {
-        sign: true,
-        bytes: [0, 1, 2, 3, 4],
-    }
 }
