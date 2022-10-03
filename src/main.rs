@@ -56,10 +56,13 @@ impl LongWord {
         out
     }
 
-    fn apply_field_modifier(&mut self, s: SubField) {
+    fn apply_field_modifier_load(&mut self, s: SubField) {
         self.sign = s.sign;
         self.bytes = [0; 5];
         // TODO
+        for i in (0..s.bytes.len()) {
+            self.bytes[5 - s.bytes.len() + i] = s.bytes[i]
+        }
     }
 }
 

@@ -59,33 +59,31 @@ fn calculate_field_modifier_test() {
 }
 
 #[test]
-fn test_apply_field_spec_load() {
-    //    assert_eq!(
-    //        LongWord {
-    //            sign: false,
-    //            bytes: [63, 17, 3, 5, 4],
-    //        },
-    //        apply_field_specification(
-    //            LongWord {
-    //                sign: false,
-    //                bytes: [63, 17, 3, 5, 4],
-    //            },
-    //            5
-    //        )
-    //    );
-    //    assert_eq!(
-    //        LongWord {
-    //            sign: false,
-    //            bytes: [0, 0, 63, 17, 3],
-    //        },
-    //        apply_field_specification(
-    //            LongWord {
-    //                sign: false,
-    //                bytes: [63, 17, 3, 5, 4],
-    //            },
-    //            3
-    //        )
-    //    );
+fn test_apply_field_modifier() {
+    let mut l = LongWord {
+        sign: false,
+        bytes: [63, 17, 3, 5, 4],
+    };
+    l.apply_field_modifier_load(l.parse_subfield(0, 5));
+    assert_eq!(
+        LongWord {
+            sign: false,
+            bytes: [63, 17, 3, 5, 4],
+        },
+        l
+    );
+    let mut l = LongWord {
+        sign: false,
+        bytes: [63, 17, 3, 5, 4],
+    };
+    l.apply_field_modifier_load(l.parse_subfield(0, 3));
+    assert_eq!(
+        LongWord {
+            sign: false,
+            bytes: [0, 0, 63, 17, 3],
+        },
+        l
+    );
 }
 
 #[test]
