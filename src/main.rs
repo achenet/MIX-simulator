@@ -132,16 +132,22 @@ impl MIX {
     fn load_A(&mut self, address: u16, index: u8, field_modifier: u8) {
         let i = index as usize;
         let m = address + self.I[i].bytes[0] as u16 + self.I[i].bytes[1] as u16;
-        let word = self.Memory[m as usize];
+        let mut word = self.Memory[m as usize];
+        let (l, r) = calculate_field_modifier(field_modifier);
+        word.apply_field_modifier_load(word.parse_subfield(l, r));
         self.A = word;
     }
 
     fn load_X(&mut self, address: u16, index: u8, field_modifier: u8) {
         let i = index as usize;
         let m = address + self.I[i].bytes[0] as u16 + self.I[i].bytes[1] as u16;
-        self.X = self.Memory[m as usize];
+        let mut word = self.Memory[m as usize];
+        let (l, r) = calculate_field_modifier(field_modifier);
+        word.apply_field_modifier_load(word.parse_subfield(l, r));
+        self.X = word;
     }
 
+    // TODO handle field modifier for this case
     fn load_I(&mut self, register_number: usize, address: u16, index: u8, field_modifier: u8) {
         let i = index as usize;
         let m: usize = (address + self.I[i].bytes[0] as u16 + self.I[i].bytes[1] as u16).into();

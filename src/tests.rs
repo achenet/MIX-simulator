@@ -49,6 +49,11 @@ fn load_A() {
         bytes: [63, 17, 3, 5, 4],
     };
     assert_eq!(m.A, expect);
+    let expect = LongWord {
+        sign: true,
+        bytes: [0, 0, 3, 5, 4],
+    };
+    m.load_A(2000, 0, 11);
 }
 
 #[test]
