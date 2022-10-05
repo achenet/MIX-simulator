@@ -22,7 +22,8 @@ enum ComparisonIndicator {
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 struct LongWord {
-    sign: bool,
+    sign: bool, // plus is true, minus is false, could implement as an ENUM for easier reading, but
+    // at the cost of more complexity
     bytes: [u8; 5],
 }
 
@@ -59,7 +60,6 @@ impl LongWord {
     fn apply_field_modifier_load(&mut self, s: SubField) {
         self.sign = s.sign;
         self.bytes = [0; 5];
-        // TODO
         for i in (0..s.bytes.len()) {
             self.bytes[5 - s.bytes.len() + i] = s.bytes[i]
         }
@@ -128,7 +128,6 @@ impl MIX {
     fn run_program(&mut self, program: String) {}
 
     // Every op code
-    // TODO take field modifier into account
     fn load_A(&mut self, address: u16, index: u8, field_modifier: u8) {
         let i = index as usize;
         let m = address + self.I[i].bytes[0] as u16 + self.I[i].bytes[1] as u16;

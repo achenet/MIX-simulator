@@ -57,6 +57,44 @@ fn load_A() {
 }
 
 #[test]
+fn store_A() {
+    let mut m = MIX::new();
+    m.Memory[2000] = LongWord {
+        sign: false,
+        bytes: [1, 2, 3, 4, 5],
+    };
+    m.A = LongWord {
+        sign: true,
+        bytes: [6, 7, 8, 9, 0],
+    };
+    m.store_A(2000, 0, 5);
+    assert_eq!(
+        m.Memory[2000],
+        LongWord {
+            sign: true,
+            bytes: [6, 7, 8, 9, 0],
+        }
+    );
+    // reset memory after each test
+    m.Memory[2000] = LongWord {
+        sign: false,
+        bytes: [1, 2, 3, 4, 5],
+    };
+    m.store_A(2000, 0, 13);
+    assert_eq!(
+        m.Memory[2000],
+        LongWord {
+            sign: false,
+            bytes: [6, 7, 8, 9, 0],
+        }
+    );
+    m.Memory[2000] = LongWord {
+        sign: false,
+        bytes: [1, 2, 3, 4, 5],
+    };
+}
+
+#[test]
 fn calculate_field_modifier_test() {
     assert_eq!((0, 5), calculate_field_modifier(5));
     assert_eq!((1, 5), calculate_field_modifier(13));
